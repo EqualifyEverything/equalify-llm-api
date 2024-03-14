@@ -1,0 +1,28 @@
+{
+  "name": "equalify-llm-api",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:EqualifyEverything/equalify-llm-api.git",
+  "author": "Christopher Aitken <chris@heythisischris.com>",
+  "license": "UNLICENSED",
+  "private": true,
+  "imports": {
+    "#src/*": "./*"
+  },
+  "scripts": {
+    "build:prod": "esbuild ./*.ts --bundle --platform=node --outdir=dist --external:@aws-sdk && cd dist && zip -r lambda.zip * > /dev/null && aws --profile equalify lambda update-function-code --function-name equalify-llm-api --zip-file \"fileb://lambda.zip\" > /dev/null && rm -rf lambda.zip",
+    "build:staging": "esbuild ./*.ts --bundle --platform=node --outdir=dist --external:@aws-sdk && cd dist && zip -r lambda.zip * > /dev/null && aws --profile equalify lambda update-function-code --function-name equalify-llm-api-staging --zip-file \"fileb://lambda.zip\" > /dev/null && rm -rf lambda.zip",
+    "build": "yarn build:staging && yarn build:prod"
+  },
+  "type": "module",
+  "dependencies": {
+    "chrono-node": "^2.7.5",
+    "fast-xml-parser": "^4.3.5",
+    "openai": "^4.29.0",
+    "serverless-mysql": "^1.5.5"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.27",
+    "esbuild": "^0.20.1"
+  }
+}
